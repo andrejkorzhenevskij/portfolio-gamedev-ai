@@ -1,0 +1,791 @@
+diff --git a/scenes/enemy/Enemy.tscn b/scenes/enemy/Enemy.tscn
+index ea512a4..f18996d 100644
+--- a/scenes/enemy/Enemy.tscn
++++ b/scenes/enemy/Enemy.tscn
+@@ -18,6 +18,8 @@ size = Vector2(32, 56)
+ size = Vector2(32, 32)
+ 
+ [node name="Enemy" type="CharacterBody2D"]
++collision_layer = 4
++collision_mask = 3
+ script = ExtResource("1_0h4gl")
+ 
+ [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+@@ -29,12 +31,16 @@ polygon = PackedVector2Array(-60, -16, 60, -16, 60, 16, -60, 16)
+ 
+ [node name="StompArea" type="Area2D" parent="."]
+ position = Vector2(0, -22)
++collision_layer = 4
++collision_mask = 2
+ 
+ [node name="CollisionShape2D" type="CollisionShape2D" parent="StompArea"]
+ shape = SubResource("RectangleShape2D_stomp")
+ 
+ [node name="FrontVision" type="Area2D" parent="."]
+ position = Vector2(120, 0)
++collision_layer = 4
++collision_mask = 2
+ 
+ [node name="CollisionShape2D" type="CollisionShape2D" parent="FrontVision"]
+ shape = SubResource("RectangleShape2D_front_vision")
+@@ -45,6 +51,8 @@ polygon = PackedVector2Array(-60, -28, 60, -28, 60, 28, -60, 28)
+ 
+ [node name="BackVision" type="Area2D" parent="."]
+ position = Vector2(-76, 0)
++collision_layer = 4
++collision_mask = 2
+ 
+ [node name="CollisionShape2D" type="CollisionShape2D" parent="BackVision"]
+ shape = SubResource("RectangleShape2D_back_vision")
+@@ -55,6 +63,8 @@ polygon = PackedVector2Array(-16, -28, 16, -28, 16, 28, -16, 28)
+ 
+ [node name="FrontDamageArea" type="Area2D" parent="."]
+ position = Vector2(76, 0)
++collision_layer = 16
++collision_mask = 2
+ 
+ [node name="CollisionShape2D" type="CollisionShape2D" parent="FrontDamageArea"]
+ shape = SubResource("RectangleShape2D_front_damage")
+diff --git a/scenes/enemy/GuardEnemy.tscn b/scenes/enemy/GuardEnemy.tscn
+index 5e712f7..33bb84e 100644
+--- a/scenes/enemy/GuardEnemy.tscn
++++ b/scenes/enemy/GuardEnemy.tscn
+@@ -12,6 +12,8 @@ size = Vector2(40, 12)
+ size = Vector2(28, 76)
+ 
+ [node name="GuardEnemy" type="CharacterBody2D"]
++collision_layer = 4
++collision_mask = 3
+ script = ExtResource("1_gmoky")
+ 
+ [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+@@ -23,12 +25,16 @@ polygon = PackedVector2Array(-20, -48, 20, -48, 20, 48, -20, 48)
+ 
+ [node name="StompArea" type="Area2D" parent="."]
+ position = Vector2(0, -54)
++collision_layer = 4
++collision_mask = 2
+ 
+ [node name="CollisionShape2D" type="CollisionShape2D" parent="StompArea"]
+ shape = SubResource("RectangleShape2D_stomp")
+ 
+ [node name="FrontDamageArea" type="Area2D" parent="."]
+ position = Vector2(32, 0)
++collision_layer = 16
++collision_mask = 2
+ 
+ [node name="CollisionShape2D" type="CollisionShape2D" parent="FrontDamageArea"]
+ shape = SubResource("RectangleShape2D_front_damage")
+diff --git a/scenes/pickups/ShapeShard.tscn b/scenes/pickups/ShapeShard.tscn
+index 1e54496..29c14bd 100644
+--- a/scenes/pickups/ShapeShard.tscn
++++ b/scenes/pickups/ShapeShard.tscn
+@@ -6,6 +6,8 @@
+ points = PackedVector2Array(0, -24, 18, 20, -18, 20)
+ 
+ [node name="ShapeShard" type="Area2D"]
++collision_layer = 32
++collision_mask = 2
+ script = ExtResource("1_t2dbk")
+ 
+ [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+diff --git a/scenes/player/Player.tscn b/scenes/player/Player.tscn
+index d3cde05..3030486 100644
+--- a/scenes/player/Player.tscn
++++ b/scenes/player/Player.tscn
+@@ -9,6 +9,8 @@ size = Vector2(32, 48)
+ points = PackedVector2Array(0, -14, 58, 10, 0, 34)
+ 
+ [node name="Player" type="CharacterBody2D"]
++collision_layer = 2
++collision_mask = 117
+ script = ExtResource("1_4n1vs")
+ 
+ [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+@@ -29,6 +31,8 @@ enabled = true
+ 
+ [node name="AttackArea" type="Area2D" parent="."]
+ position = Vector2(18, 18)
++collision_layer = 8
++collision_mask = 4
+ monitoring = false
+ 
+ [node name="CollisionShape2D" type="CollisionShape2D" parent="AttackArea"]
+diff --git a/scenes/world/world.tscn b/scenes/world/world.tscn
+index d22cc80..3f96220 100644
+--- a/scenes/world/world.tscn
++++ b/scenes/world/world.tscn
+@@ -4,10 +4,11 @@
+ [ext_resource type="Script" uid="uid://blpt773um51bq" path="res://scripts/World.gd" id="2_mnq5h"]
+ [ext_resource type="PackedScene" path="res://scenes/ui/UI.tscn" id="3_1fp7r"]
+ [ext_resource type="PackedScene" path="res://scenes/enemy/Enemy.tscn" id="4_p7b1f"]
+-[ext_resource type="Script" path="res://scripts/BonusHeart.gd" id="5_ctj3w"]
+-[ext_resource type="Script" path="res://scripts/MovingPlatform.gd" id="6_4n2aa"]
++[ext_resource type="Script" uid="uid://dku2f7plric2w" path="res://scripts/BonusHeart.gd" id="5_ctj3w"]
++[ext_resource type="Script" uid="uid://b7ydotqf5kr6i" path="res://scripts/MovingPlatform.gd" id="6_4n2aa"]
+ [ext_resource type="PackedScene" path="res://scenes/enemy/GuardEnemy.tscn" id="7_v50va"]
+-[ext_resource type="Script" path="res://scripts/TutorialHint.gd" id="8_g3jfp"]
++[ext_resource type="Script" uid="uid://dlqahii1hv8xo" path="res://scripts/TutorialHint.gd" id="8_g3jfp"]
++[ext_resource type="Script" uid="uid://ce5bd0dvoswt4" path="res://scripts/GroundTiles.gd" id="9_n7x8w"]
+ 
+ [sub_resource type="RectangleShape2D" id="RectangleShape2D_4rhad"]
+ size = Vector2(3000, 40)
+@@ -25,12 +26,12 @@ size = Vector2(12000, 260)
+ size = Vector2(220, 32)
+ 
+ [sub_resource type="CircleShape2D" id="CircleShape2D_winorb"]
+-radius = 28.0
++radius = 20.0
+ 
+ [node name="World" type="Node2D" unique_id=1242523632]
+ script = ExtResource("2_mnq5h")
+ 
+-[node name="Background" type="ColorRect" parent="."]
++[node name="Background" type="ColorRect" parent="." unique_id=1471706927]
+ offset_left = -2400.0
+ offset_top = -900.0
+ offset_right = 3200.0
+@@ -42,72 +43,18 @@ position = Vector2(0, 240)
+ 
+ [node name="Ground" type="StaticBody2D" parent="." unique_id=1395302083]
+ position = Vector2(0, 300)
++collision_mask = 6
+ 
+-[node name="Segment00" type="Polygon2D" parent="Ground" unique_id=1430486262]
+-color = Color(0.18, 0.19, 0.22, 1)
+-polygon = PackedVector2Array(-1500, -20, -1300, -20, -1300, 20, -1500, 20)
+-
+-[node name="Segment01" type="Polygon2D" parent="Ground" unique_id=665409372]
+-color = Color(0.28, 0.29, 0.33, 1)
+-polygon = PackedVector2Array(-1300, -20, -1100, -20, -1100, 20, -1300, 20)
+-
+-[node name="Segment02" type="Polygon2D" parent="Ground" unique_id=1760201556]
+-color = Color(0.18, 0.19, 0.22, 1)
+-polygon = PackedVector2Array(-1100, -20, -900, -20, -900, 20, -1100, 20)
+-
+-[node name="Segment03" type="Polygon2D" parent="Ground" unique_id=1943267279]
+-color = Color(0.28, 0.29, 0.33, 1)
+-polygon = PackedVector2Array(-900, -20, -700, -20, -700, 20, -900, 20)
+-
+-[node name="Segment04" type="Polygon2D" parent="Ground" unique_id=1652318160]
+-color = Color(0.18, 0.19, 0.22, 1)
+-polygon = PackedVector2Array(-700, -20, -500, -20, -500, 20, -700, 20)
+-
+-[node name="Segment05" type="Polygon2D" parent="Ground" unique_id=1475951726]
+-color = Color(0.28, 0.29, 0.33, 1)
+-polygon = PackedVector2Array(-500, -20, -300, -20, -300, 20, -500, 20)
+-
+-[node name="Segment06" type="Polygon2D" parent="Ground" unique_id=1616118046]
+-color = Color(0.18, 0.19, 0.22, 1)
+-polygon = PackedVector2Array(-300, -20, -100, -20, -100, 20, -300, 20)
+-
+-[node name="Segment07" type="Polygon2D" parent="Ground" unique_id=1657416578]
+-color = Color(0.28, 0.29, 0.33, 1)
+-polygon = PackedVector2Array(-100, -20, 100, -20, 100, 20, -100, 20)
+-
+-[node name="Segment08" type="Polygon2D" parent="Ground" unique_id=969626028]
+-color = Color(0.18, 0.19, 0.22, 1)
+-polygon = PackedVector2Array(100, -20, 300, -20, 300, 20, 100, 20)
+-
+-[node name="Segment09" type="Polygon2D" parent="Ground" unique_id=1148422082]
+-color = Color(0.28, 0.29, 0.33, 1)
+-polygon = PackedVector2Array(300, -20, 500, -20, 500, 20, 300, 20)
+-
+-[node name="Segment10" type="Polygon2D" parent="Ground" unique_id=1727047810]
+-color = Color(0.18, 0.19, 0.22, 1)
+-polygon = PackedVector2Array(500, -20, 700, -20, 700, 20, 500, 20)
+-
+-[node name="Segment11" type="Polygon2D" parent="Ground" unique_id=842518689]
+-color = Color(0.28, 0.29, 0.33, 1)
+-polygon = PackedVector2Array(700, -20, 900, -20, 900, 20, 700, 20)
+-
+-[node name="Segment12" type="Polygon2D" parent="Ground" unique_id=224163404]
+-color = Color(0.18, 0.19, 0.22, 1)
+-polygon = PackedVector2Array(900, -20, 1100, -20, 1100, 20, 900, 20)
+-
+-[node name="Segment13" type="Polygon2D" parent="Ground" unique_id=947711277]
+-color = Color(0.28, 0.29, 0.33, 1)
+-polygon = PackedVector2Array(1100, -20, 1300, -20, 1300, 20, 1100, 20)
+-
+-[node name="Segment14" type="Polygon2D" parent="Ground" unique_id=837702567]
+-color = Color(0.18, 0.19, 0.22, 1)
+-polygon = PackedVector2Array(1300, -20, 1500, -20, 1500, 20, 1300, 20)
++[node name="GroundTiles" type="TileMapLayer" parent="Ground" unique_id=860316678]
++position = Vector2(-1500, -20)
++script = ExtResource("9_n7x8w")
+ 
+ [node name="CollisionShape2D" type="CollisionShape2D" parent="Ground" unique_id=2015679000]
+ shape = SubResource("RectangleShape2D_4rhad")
+ 
+ [node name="BonusPlatform" type="StaticBody2D" parent="." unique_id=989935676]
+ position = Vector2(-250, 100)
++collision_mask = 6
+ 
+ [node name="CollisionShape2D" type="CollisionShape2D" parent="BonusPlatform" unique_id=69056351]
+ shape = SubResource("RectangleShape2D_bonus_platform")
+@@ -118,6 +65,8 @@ polygon = PackedVector2Array(-110, -16, 110, -16, 110, 16, -110, 16)
+ 
+ [node name="BonusHeart" type="Area2D" parent="." unique_id=2049906498]
+ position = Vector2(-250, 48)
++collision_layer = 32
++collision_mask = 2
+ script = ExtResource("5_ctj3w")
+ 
+ [node name="CollisionShape2D" type="CollisionShape2D" parent="BonusHeart" unique_id=1422358579]
+@@ -129,6 +78,8 @@ polygon = PackedVector2Array(0, 24, -24, 4, -18, -18, -6, -22, 0, -12, 6, -22, 1
+ 
+ [node name="FallZone" type="Area2D" parent="." unique_id=1804295931]
+ position = Vector2(0, 700)
++collision_layer = 64
++collision_mask = 2
+ 
+ [node name="CollisionShape2D" type="CollisionShape2D" parent="FallZone" unique_id=1168593153]
+ shape = SubResource("RectangleShape2D_fallzone")
+@@ -137,7 +88,7 @@ shape = SubResource("RectangleShape2D_fallzone")
+ color = Color(1, 0, 0, 0.35)
+ polygon = PackedVector2Array(-6000, -130, 6000, -130, 6000, 130, -6000, 130)
+ 
+-[node name="TutorialHint" type="Label" parent="."]
++[node name="TutorialHint" type="Label" parent="." unique_id=1491265537]
+ offset_left = -260.0
+ offset_top = 400.0
+ offset_right = 260.0
+@@ -162,6 +113,7 @@ patrol_speed = 85.0
+ 
+ [node name="FinishPlatform" type="StaticBody2D" parent="." unique_id=1870458360]
+ position = Vector2(1760, 220)
++collision_mask = 6
+ script = ExtResource("6_4n2aa")
+ 
+ [node name="CollisionShape2D" type="CollisionShape2D" parent="FinishPlatform" unique_id=1278791275]
+@@ -171,20 +123,19 @@ shape = SubResource("RectangleShape2D_finish_platform")
+ color = Color(0.82, 0.82, 0.9, 1)
+ polygon = PackedVector2Array(-110, -16, 110, -16, 110, 16, -110, 16)
+ 
+-[node name="GuardEnemy" parent="FinishPlatform" instance=ExtResource("7_v50va")]
++[node name="GuardEnemy" parent="FinishPlatform" unique_id=1432163872 instance=ExtResource("7_v50va")]
+ position = Vector2(35, -64)
+-patrol_half_width = 50.0
+-patrol_speed = 35.0
+-attack_cooldown = 0.9
+ 
+ [node name="WinOrb" type="Area2D" parent="." unique_id=1704198956]
+-position = Vector2(1840, 160)
++position = Vector2(1910, 160)
++collision_layer = 64
++collision_mask = 2
+ 
+ [node name="CollisionShape2D" type="CollisionShape2D" parent="WinOrb" unique_id=1183407195]
+ shape = SubResource("CircleShape2D_winorb")
+ 
+ [node name="Polygon2D" type="Polygon2D" parent="WinOrb" unique_id=1782851197]
+-polygon = PackedVector2Array(0, -28, 20, -20, 28, 0, 20, 20, 0, 28, -20, 20, -28, 0, -20, -20)
++polygon = PackedVector2Array(0, -20, 14, -14, 20, 0, 14, 14, 0, 20, -14, 14, -20, 0, -14, -14)
+ 
+ [node name="UI" parent="." unique_id=1189988713 instance=ExtResource("3_1fp7r")]
+ 
+diff --git a/scripts/BaseEnemy.gd b/scripts/BaseEnemy.gd
+new file mode 100644
+index 0000000..c6fa854
+--- /dev/null
++++ b/scripts/BaseEnemy.gd
+@@ -0,0 +1,61 @@
++extends CharacterBody2D
++
++signal died(death_position: Vector2)
++
++const SHAPE_SHARD_SCENE := preload("res://scenes/pickups/ShapeShard.tscn")
++
++@export var hp: int = 2
++@export var max_hp: int = 2
++
++@onready var _body_polygon: Polygon2D = $Polygon2D
++
++var _is_dead := false
++var _state_version := 0
++
++
++func _ready() -> void:
++	add_to_group("enemies")
++	add_to_group("damageable")
++
++
++func take_stomp_damage() -> void:
++	_take_damage()
++
++
++func take_attack_damage() -> void:
++	_take_damage()
++
++
++func _take_damage() -> void:
++	if _is_dead:
++		return
++
++	hp -= 1
++	if hp <= 0:
++		_die()
++	else:
++		_flash_damage()
++
++
++func _die() -> void:
++	_is_dead = true
++	_state_version += 1
++	velocity = Vector2.ZERO
++	died.emit(global_position)
++	_spawn_shape_shard()
++	queue_free()
++
++
++func _flash_damage() -> void:
++	_body_polygon.color = Color(0.55, 0.18, 0.85, 1)
++
++
++func _prepare_shape_shard() -> Node2D:
++	var shard := SHAPE_SHARD_SCENE.instantiate() as Node2D
++	shard.global_position = global_position
++	return shard
++
++
++func _spawn_shape_shard() -> void:
++	var shard := _prepare_shape_shard()
++	get_parent().add_child(shard)
+diff --git a/scripts/BaseEnemy.gd.uid b/scripts/BaseEnemy.gd.uid
+new file mode 100644
+index 0000000..a23ac1e
+--- /dev/null
++++ b/scripts/BaseEnemy.gd.uid
+@@ -0,0 +1 @@
++uid://d1jxcp3mnnane
+diff --git a/scripts/BonusHeart.gd b/scripts/BonusHeart.gd
+index 6aed8f0..94d0319 100644
+--- a/scripts/BonusHeart.gd
++++ b/scripts/BonusHeart.gd
+@@ -4,8 +4,12 @@ extends Area2D
+ @export var max_hp: int = 4
+ 
+ 
++func _ready() -> void:
++	add_to_group("pickups")
++
++
+ func _on_body_entered(body: Node2D) -> void:
+-	if not body.has_method("heal"):
++	if not body.is_in_group("player"):
+ 		return
+ 
+ 	body.heal(heal_amount, max_hp)
+diff --git a/scripts/Enemy.gd b/scripts/Enemy.gd
+index d2b89a1..bce7869 100644
+--- a/scripts/Enemy.gd
++++ b/scripts/Enemy.gd
+@@ -1,6 +1,4 @@
+-extends CharacterBody2D
+-
+-const SHAPE_SHARD_SCENE := preload("res://scenes/pickups/ShapeShard.tscn")
++extends "res://scripts/BaseEnemy.gd"
+ 
+ enum State {
+ 	PATROL,
+@@ -8,7 +6,6 @@ enum State {
+ 	SEARCH,
+ }
+ 
+-@export var hp: int = 2
+ @export var patrol_left_x: float = 640.0
+ @export var patrol_right_x: float = 920.0
+ @export var patrol_speed: float = 80.0
+@@ -19,7 +16,6 @@ enum State {
+ @export var search_wait_time: float = 1.0
+ @export var search_radius: float = 200.0
+ 
+-@onready var _body_polygon: Polygon2D = $Polygon2D
+ @onready var _alert_label: Label = $AlertLabel
+ @onready var _front_vision: Area2D = $FrontVision
+ @onready var _back_vision: Area2D = $BackVision
+@@ -28,7 +24,6 @@ enum State {
+ 
+ var _state: State = State.PATROL
+ var _patrol_direction: float = 1.0
+-var _is_dead := false
+ var _edge_message_visible := false
+ var _is_paused_at_edge := false
+ var _is_searching := false
+@@ -46,6 +41,7 @@ var _front_damage_bodies: Array[CharacterBody2D] = []
+ 
+ 
+ func _ready() -> void:
++	super._ready()
+ 	_alert_label.hide()
+ 	_update_vision_direction()
+ 
+@@ -110,33 +106,8 @@ func _search() -> void:
+ 	velocity.x = _search_direction * search_speed
+ 
+ 
+-func take_stomp_damage() -> void:
+-	if _is_dead:
+-		return
+-
+-	_take_damage()
+-
+-
+-func take_attack_damage() -> void:
+-	if _is_dead:
+-		return
+-
+-	_take_damage()
+-
+-
+-func _take_damage() -> void:
+-	hp -= 1
+-	if hp <= 0:
+-		_is_dead = true
+-		velocity = Vector2.ZERO
+-		_spawn_shape_shard()
+-		queue_free()
+-	else:
+-		_body_polygon.color = Color(0.55, 0.18, 0.85, 1)
+-
+-
+ func _on_stomp_area_body_entered(body: Node2D) -> void:
+-	if not body.has_method("bounce_from_enemy"):
++	if not body.is_in_group("player"):
+ 		return
+ 
+ 	var player := body as CharacterBody2D
+@@ -153,12 +124,12 @@ func _on_stomp_area_body_entered(body: Node2D) -> void:
+ 
+ func _on_vision_body_entered(body: Node2D) -> void:
+ 	var player := body as CharacterBody2D
+-	if player == null or not player.has_method("bounce_from_enemy"):
++	if player == null or not player.is_in_group("player"):
+ 		return
+ 
+ 	_detected_player = player
+ 	last_seen_player_position = player.global_position
+-	_state = State.CHASE
++	_set_state(State.CHASE)
+ 	_is_searching = false
+ 	_search_waiting_to_start = false
+ 	_alert_label.text = "!!"
+@@ -174,10 +145,21 @@ func _return_to_patrol() -> void:
+ 	_detected_player = null
+ 	_is_searching = false
+ 	_search_waiting_to_start = false
+-	_state = State.PATROL
++	_set_state(State.PATROL)
+ 	_alert_label.hide()
+ 
+ 
++func _set_state(next_state: State) -> void:
++	if _state == next_state:
++		return
++
++	_state = next_state
++	_state_version += 1
++	if _state != State.PATROL:
++		_is_paused_at_edge = false
++		_edge_message_visible = false
++
++
+ func _set_direction(direction: float) -> void:
+ 	if is_zero_approx(direction):
+ 		return
+@@ -205,7 +187,13 @@ func _pause_at_edge_then_turn(next_direction: float) -> void:
+ 	velocity = Vector2.ZERO
+ 	_alert_label.text = "о, край!"
+ 	_alert_label.show()
++	var version := _state_version
+ 	await get_tree().create_timer(1.0).timeout
++	if version != _state_version:
++		return
++	if is_queued_for_deletion() or _is_dead:
++		return
++
+ 	if _state == State.PATROL and _alert_label.text == "о, край!":
+ 		_alert_label.hide()
+ 		_set_direction(next_direction)
+@@ -220,19 +208,24 @@ func _begin_search() -> void:
+ 	_detected_player = null
+ 	_is_searching = true
+ 	_search_waiting_to_start = true
+-	_state = State.SEARCH
++	_set_state(State.SEARCH)
+ 	velocity = Vector2.ZERO
+ 	_start_search_after_delay()
+ 
+ 
+ func _start_search_after_delay() -> void:
++	var version := _state_version
+ 	await get_tree().create_timer(search_wait_time).timeout
++	if version != _state_version:
++		return
++	if is_queued_for_deletion() or _is_dead:
++		return
+ 	if not _is_searching or _is_dead:
+ 		return
+ 
+ 	_alert_label.text = "?"
+ 	_alert_label.show()
+-	_state = State.SEARCH
++	_set_state(State.SEARCH)
+ 	_search_waiting_to_start = false
+ 	_search_center_x = last_seen_player_position.x
+ 	_search_left_x = _search_center_x - search_radius
+@@ -264,7 +257,7 @@ func _advance_search_phase() -> void:
+ 
+ func _on_front_damage_area_body_entered(body: Node2D) -> void:
+ 	var player := body as CharacterBody2D
+-	if player == null or not player.has_method("take_damage"):
++	if player == null or not player.is_in_group("player") or not player.is_in_group("damageable"):
+ 		return
+ 
+ 	if not _front_damage_bodies.has(player):
+@@ -291,24 +284,21 @@ func _try_damage_front_targets() -> void:
+ 		return
+ 
+ 	for player in _front_damage_bodies:
+-		if is_instance_valid(player) and player.has_method("take_damage"):
++		if is_instance_valid(player) and player.is_in_group("player") and player.is_in_group("damageable"):
+ 			player.take_damage(1, global_position)
+ 			_attack_cooldown_remaining = attack_cooldown
+ 			_play_attack_feedback()
+ 			return
+ 
+ 
+-func _spawn_shape_shard() -> void:
+-	var shard := SHAPE_SHARD_SCENE.instantiate()
+-	get_parent().add_child(shard)
+-	shard.global_position = global_position
+-
+-
+ func _play_attack_feedback() -> void:
+ 	_front_damage_visual.color = Color(1, 0, 0, 0.6)
+ 	_body_polygon.scale = Vector2(1.12, 0.92)
++	var version := _state_version
+ 	await get_tree().create_timer(0.1).timeout
+-	if not is_instance_valid(self):
++	if version != _state_version:
++		return
++	if is_queued_for_deletion() or _is_dead:
+ 		return
+ 
+ 	_front_damage_visual.color = Color(1, 0, 0, 0.22)
+diff --git a/scripts/GroundTiles.gd b/scripts/GroundTiles.gd
+new file mode 100644
+index 0000000..e6cad77
+--- /dev/null
++++ b/scripts/GroundTiles.gd
+@@ -0,0 +1,32 @@
++extends TileMapLayer
++
++@export var tile_count: int = 15
++@export var tile_size: Vector2i = Vector2i(200, 40)
++@export var dark_color: Color = Color(0.18, 0.19, 0.22, 1)
++@export var light_color: Color = Color(0.28, 0.29, 0.33, 1)
++
++
++func _ready() -> void:
++	_build_ground_tiles()
++
++
++func _build_ground_tiles() -> void:
++	clear()
++
++	var ground_tile_set := TileSet.new()
++	ground_tile_set.tile_size = tile_size
++
++	var atlas := TileSetAtlasSource.new()
++	var image := Image.create_empty(tile_size.x * 2, tile_size.y, false, Image.FORMAT_RGBA8)
++	image.fill_rect(Rect2i(Vector2i.ZERO, tile_size), dark_color)
++	image.fill_rect(Rect2i(Vector2i(tile_size.x, 0), tile_size), light_color)
++
++	atlas.set_texture(ImageTexture.create_from_image(image))
++	atlas.set_texture_region_size(tile_size)
++	atlas.create_tile(Vector2i(0, 0))
++	atlas.create_tile(Vector2i(1, 0))
++	ground_tile_set.add_source(atlas, 0)
++	tile_set = ground_tile_set
++
++	for cell_x in range(tile_count):
++		set_cell(Vector2i(cell_x, 0), 0, Vector2i(cell_x % 2, 0))
+diff --git a/scripts/GroundTiles.gd.uid b/scripts/GroundTiles.gd.uid
+new file mode 100644
+index 0000000..8f8c581
+--- /dev/null
++++ b/scripts/GroundTiles.gd.uid
+@@ -0,0 +1 @@
++uid://ce5bd0dvoswt4
+diff --git a/scripts/GuardEnemy.gd b/scripts/GuardEnemy.gd
+index cc91e47..b7927fd 100644
+--- a/scripts/GuardEnemy.gd
++++ b/scripts/GuardEnemy.gd
+@@ -1,25 +1,21 @@
+-extends CharacterBody2D
++extends "res://scripts/BaseEnemy.gd"
+ 
+-const SHAPE_SHARD_SCENE := preload("res://scenes/pickups/ShapeShard.tscn")
+-
+-@export var hp: int = 2
+ @export var patrol_half_width: float = 50.0
+ @export var patrol_speed: float = 35.0
+ @export var attack_cooldown: float = 0.9
+ @export var attack_knockback_velocity: Vector2 = Vector2(520, -340)
+ 
+-@onready var _body_polygon: Polygon2D = $Polygon2D
+ @onready var _front_damage_area: Area2D = $FrontDamageArea
+ @onready var _front_damage_visual: Polygon2D = $FrontDamageArea/Polygon2D
+ 
+ var _patrol_center_x := 0.0
+ var _patrol_direction := 1.0
+-var _is_dead := false
+ var _attack_cooldown_remaining := 0.0
+ var _front_damage_bodies: Array[CharacterBody2D] = []
+ 
+ 
+ func _ready() -> void:
++	super._ready()
+ 	_patrol_center_x = position.x
+ 	_update_front_direction()
+ 
+@@ -33,31 +29,6 @@ func _physics_process(delta: float) -> void:
+ 	move_and_slide()
+ 
+ 
+-func take_attack_damage() -> void:
+-	if _is_dead:
+-		return
+-
+-	_take_damage()
+-
+-
+-func take_stomp_damage() -> void:
+-	if _is_dead:
+-		return
+-
+-	_take_damage()
+-
+-
+-func _take_damage() -> void:
+-	hp -= 1
+-	if hp <= 0:
+-		_is_dead = true
+-		velocity = Vector2.ZERO
+-		_spawn_shape_shard()
+-		queue_free()
+-	else:
+-		_body_polygon.color = Color(0.55, 0.18, 0.85, 1)
+-
+-
+ func _patrol() -> void:
+ 	var left_x := _patrol_center_x - patrol_half_width
+ 	var right_x := _patrol_center_x + patrol_half_width
+@@ -87,7 +58,7 @@ func _update_front_direction() -> void:
+ 
+ 
+ func _on_stomp_area_body_entered(body: Node2D) -> void:
+-	if not body.has_method("bounce_from_enemy"):
++	if not body.is_in_group("player"):
+ 		return
+ 
+ 	var player := body as CharacterBody2D
+@@ -101,7 +72,7 @@ func _on_stomp_area_body_entered(body: Node2D) -> void:
+ 
+ func _on_front_damage_area_body_entered(body: Node2D) -> void:
+ 	var player := body as CharacterBody2D
+-	if player == null or not player.has_method("take_damage"):
++	if player == null or not player.is_in_group("player") or not player.is_in_group("damageable"):
+ 		return
+ 
+ 	if not _front_damage_bodies.has(player):
+@@ -128,7 +99,7 @@ func _try_damage_front_targets() -> void:
+ 		return
+ 
+ 	for player in _front_damage_bodies:
+-		if is_instance_valid(player) and player.has_method("take_damage"):
++		if is_instance_valid(player) and player.is_in_group("player") and player.is_in_group("damageable"):
+ 			player.take_damage(1, global_position, attack_knockback_velocity)
+ 			_attack_cooldown_remaining = attack_cooldown
+ 			_play_attack_feedback()
+@@ -138,8 +109,11 @@ func _try_damage_front_targets() -> void:
+ func _play_attack_feedback() -> void:
+ 	_front_damage_visual.color = Color(1, 0, 0, 0.65)
+ 	_body_polygon.scale = Vector2(1.2, 0.92)
++	var version := _state_version
+ 	await get_tree().create_timer(0.12).timeout
+-	if not is_instance_valid(self):
++	if version != _state_version:
++		return
++	if is_queued_for_deletion() or _is_dead:
+ 		return
+ 
+ 	_front_damage_visual.color = Color(1, 0, 0, 0.24)
+@@ -147,7 +121,7 @@ func _play_attack_feedback() -> void:
+ 
+ 
+ func _spawn_shape_shard() -> void:
+-	var shard := SHAPE_SHARD_SCENE.instantiate()
++	var shard := _prepare_shape_shard()
+ 	var shard_parent := get_parent()
+ 	if shard_parent == null:
+ 		return
+@@ -155,4 +129,3 @@ func _spawn_shape_shard() -> void:
+ 		shard_parent = shard_parent.get_parent()
+ 
+ 	shard_parent.add_child(shard)
+-	shard.global_position = global_position
+diff --git a/scripts/Player.gd b/scripts/Player.gd
+index ef0dee6..467b51b 100644
+--- a/scripts/Player.gd
++++ b/scripts/Player.gd
+@@ -30,6 +30,8 @@ var _attack_hit_bodies: Array[Node2D] = []
+ 
+ 
+ func _ready() -> void:
++	add_to_group("player")
++	add_to_group("damageable")
+ 	_air_stomp_visual.hide()
+ 	_attack_area.monitoring = false
+ 	_attack_visual.hide()
+@@ -178,7 +180,7 @@ func _check_attack_overlaps() -> void:
+ 
+ 
+ func _apply_attack_hit(body: Node2D) -> void:
+-	if not _is_attacking or not body.has_method("take_attack_damage"):
++	if not _is_attacking or not body.is_in_group("enemies") or not body.is_in_group("damageable"):
+ 		return
+ 	if _attack_hit_bodies.has(body):
+ 		return
+diff --git a/scripts/ShapeShard.gd b/scripts/ShapeShard.gd
+index 66a7fbd..b0d4f4c 100644
+--- a/scripts/ShapeShard.gd
++++ b/scripts/ShapeShard.gd
+@@ -1,8 +1,12 @@
+ extends Area2D
+ 
+ 
++func _ready() -> void:
++	add_to_group("pickups")
++
++
+ func _on_body_entered(body: Node2D) -> void:
+-	if not body.has_method("collect_shape_shard"):
++	if not body.is_in_group("player"):
+ 		return
+ 
+ 	body.collect_shape_shard()
+diff --git a/scripts/World.gd b/scripts/World.gd
+index 4e97e74..19a82c3 100644
+--- a/scripts/World.gd
++++ b/scripts/World.gd
+@@ -7,6 +7,8 @@ var _waiting_for_restart := false
+ 
+ 
+ func _ready() -> void:
++	$FallZone.add_to_group("triggers")
++	$WinOrb.add_to_group("triggers")
+ 	_ui.set_hp(_player.hp)
+ 	_player.hp_changed.connect(_ui.set_hp)
+ 	_player.died.connect(_on_player_died)
