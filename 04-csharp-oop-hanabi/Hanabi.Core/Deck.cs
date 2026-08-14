@@ -13,6 +13,17 @@ public sealed class Deck
 
     public bool IsEmpty => Count == 0;
 
+    public static Deck CreateStandard()
+    {
+        var cards =
+            from color in Enum.GetValues<CardColor>()
+            from rank in Enumerable.Range(1, 5)
+            from _ in Enumerable.Range(0, rank == 1 ? 3 : rank == 5 ? 1 : 2)
+            select new Card(color, rank);
+
+        return new Deck(cards);
+    }
+
     public Card Draw()
     {
         if (IsEmpty)
