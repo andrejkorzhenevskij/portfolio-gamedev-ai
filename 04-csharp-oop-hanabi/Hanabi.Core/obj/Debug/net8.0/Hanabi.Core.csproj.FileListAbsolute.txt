@@ -1,0 +1,11 @@
+/home/seb/Hanabi/Hanabi.Core/obj/Debug/net8.0/Hanabi.Core.GeneratedMSBuildEditorConfig.editorconfig
+/home/seb/Hanabi/Hanabi.Core/obj/Debug/net8.0/Hanabi.Core.AssemblyInfoInputs.cache
+/home/seb/Hanabi/Hanabi.Core/obj/Debug/net8.0/Hanabi.Core.AssemblyInfo.cs
+/home/seb/Hanabi/Hanabi.Core/obj/Debug/net8.0/Hanabi.Core.csproj.CoreCompileInputs.cache
+/home/seb/Hanabi/Hanabi.Core/bin/Debug/net8.0/Hanabi.Core.deps.json
+/home/seb/Hanabi/Hanabi.Core/bin/Debug/net8.0/Hanabi.Core.dll
+/home/seb/Hanabi/Hanabi.Core/bin/Debug/net8.0/Hanabi.Core.pdb
+/home/seb/Hanabi/Hanabi.Core/obj/Debug/net8.0/Hanabi.Core.dll
+/home/seb/Hanabi/Hanabi.Core/obj/Debug/net8.0/refint/Hanabi.Core.dll
+/home/seb/Hanabi/Hanabi.Core/obj/Debug/net8.0/Hanabi.Core.pdb
+/home/seb/Hanabi/Hanabi.Core/obj/Debug/net8.0/ref/Hanabi.Core.dll
