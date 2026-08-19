@@ -19,4 +19,20 @@ public sealed class Hand
         slots.RemoveAt(index);
         return slot.Card;
     }
+
+    public void ApplyColorHint(CardColor color)
+    {
+        foreach (var slot in slots)
+        {
+            slot.Knowledge.ApplyColorHint(color, slot.Card.Color == color);
+        }
+    }
+
+    public void ApplyRankHint(int rank)
+    {
+        foreach (var slot in slots)
+        {
+            slot.Knowledge.ApplyRankHint(rank, slot.Card.Rank == rank);
+        }
+    }
 }

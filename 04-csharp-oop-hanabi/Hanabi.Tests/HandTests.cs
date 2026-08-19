@@ -75,4 +75,82 @@ public class HandTests
 
         Assert.Equal([first, third], hand.Slots.Select(slot => slot.Card));
     }
+
+    [Fact]
+    public void ApplyColorHint_NarrowsMatchingSlotsToHintedColor()
+    {
+        var hand = new Hand();
+        hand.Add(new Card(CardColor.Red, 1));
+        hand.Add(new Card(CardColor.Blue, 5));
+
+        hand.ApplyColorHint(CardColor.Red);
+
+        Assert.Equal([CardColor.Red], hand.Slots[0].Knowledge.PossibleColors);
+    }
+
+    [Fact]
+    public void ApplyColorHint_RemovesHintedColorFromNonMatchingSlots()
+    {
+        var hand = new Hand();
+        hand.Add(new Card(CardColor.Red, 1));
+        hand.Add(new Card(CardColor.Blue, 5));
+
+        hand.ApplyColorHint(CardColor.Red);
+
+        Assert.DoesNotContain(CardColor.Red, hand.Slots[1].Knowledge.PossibleColors);
+    }
+
+    [Fact]
+    public void ApplyRankHint_NarrowsMatchingSlotsToHintedRank()
+    {
+        var hand = new Hand();
+        hand.Add(new Card(CardColor.Red, 1));
+        hand.Add(new Card(CardColor.Blue, 5));
+
+        hand.ApplyRankHint(5);
+
+        Assert.Equal([5], hand.Slots[1].Knowledge.PossibleRanks);
+    }
+
+    [Fact]
+    public void ApplyRankHint_RemovesHintedRankFromNonMatchingSlots()
+    {
+        var hand = new Hand();
+        hand.Add(new Card(CardColor.Red, 1));
+        hand.Add(new Card(CardColor.Blue, 5));
+
+        hand.ApplyRankHint(5);
+
+        Assert.DoesNotContain(5, hand.Slots[0].Knowledge.PossibleRanks);
+    }
+
+    [Fact]
+    public void ApplyColorHint_UpdatesAllSlots()
+    {
+        var hand = new Hand();
+        hand.Add(new Card(CardColor.Red, 1));
+        hand.Add(new Card(CardColor.Red, 2));
+        hand.Add(new Card(CardColor.Blue, 5));
+
+        hand.ApplyColorHint(CardColor.Red);
+
+        Assert.Equal([CardColor.Red], hand.Slots[0].Knowledge.PossibleColors);
+        Assert.Equal([CardColor.Red], hand.Slots[1].Knowledge.PossibleColors);
+        Assert.DoesNotContain(CardColor.Red, hand.Slots[2].Knowledge.PossibleColors);
+    }
+
+    [Fact]
+    public void ApplyRankHint_PreservesExistingKnowledgeAndNarrowsFurther()
+    {
+        var hand = new Hand();
+        hand.Add(new Card(CardColor.Red, 2));
+        hand.Add(new Card(CardColor.Blue, 5));
+        hand.ApplyColorHint(CardColor.Red);
+
+        hand.ApplyRankHint(2);
+
+        Assert.Equal([CardColor.Red], hand.Slots[0].Knowledge.PossibleColors);
+        Assert.Equal([2], hand.Slots[0].Knowledge.PossibleRanks);
+        Assert.DoesNotContain(2, hand.Slots[1].Knowledge.PossibleRanks);
+    }
 }
