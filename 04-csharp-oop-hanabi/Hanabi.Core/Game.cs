@@ -49,6 +49,28 @@ public sealed class Game
         var card = hand.RemoveAt(handIndex);
         DiscardPile.Add(card);
 
+        CompleteSuccessfulAction(hand);
+    }
+
+    public void Play(int handIndex)
+    {
+        var hand = Hands[CurrentPlayerIndex];
+        var card = hand.RemoveAt(handIndex);
+
+        if (!Tableau.CanPlay(card))
+        {
+            DiscardPile.Add(card);
+            MoveNumber++;
+            IsOver = true;
+            return;
+        }
+
+        Tableau.Play(card);
+        CompleteSuccessfulAction(hand);
+    }
+
+    private void CompleteSuccessfulAction(Hand hand)
+    {
         if (!DrawDeck.IsEmpty)
         {
             hand.Add(DrawDeck.Draw());
