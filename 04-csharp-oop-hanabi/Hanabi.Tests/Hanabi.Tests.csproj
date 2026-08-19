@@ -23,6 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Hanabi.Cli\Hanabi.Cli.csproj" />
     <ProjectReference Include="..\Hanabi.Core\Hanabi.Core.csproj" />
   </ItemGroup>
 
