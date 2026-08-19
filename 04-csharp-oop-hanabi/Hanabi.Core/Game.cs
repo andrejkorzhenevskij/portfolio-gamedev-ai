@@ -39,7 +39,7 @@ public sealed class Game
 
     public int MoveNumber { get; private set; } = 0;
 
-    public int RiskyPlayCount { get; } = 0;
+    public int RiskyPlayCount { get; private set; } = 0;
 
     public bool IsOver { get; private set; } = false;
 
@@ -55,7 +55,11 @@ public sealed class Game
     public void Play(int handIndex)
     {
         var hand = Hands[CurrentPlayerIndex];
-        var card = hand.RemoveAt(handIndex);
+        var slot = hand.Slots[handIndex];
+        var card = slot.Card;
+        var isRisky = !Tableau.IsGuaranteedPlayable(slot.Knowledge);
+
+        hand.RemoveAt(handIndex);
 
         if (!Tableau.CanPlay(card))
         {
@@ -66,6 +70,11 @@ public sealed class Game
         }
 
         Tableau.Play(card);
+        if (isRisky)
+        {
+            RiskyPlayCount++;
+        }
+
         CompleteSuccessfulAction(hand);
     }
 

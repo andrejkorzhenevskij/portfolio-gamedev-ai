@@ -282,6 +282,74 @@ public class GameTests
         Assert.Equal(0, game.CurrentPlayerIndex);
     }
 
+    [Fact]
+    public void Play_UnknownSuccessfulRankOneOnEmptyTableauIsRisky()
+    {
+        var game = new Game(OrderedCards());
+
+        game.Play(0);
+
+        Assert.Equal(1, game.RiskyPlayCount);
+    }
+
+    [Fact]
+    public void Play_CardKnownToBeRankOneIsSafeOnEmptyTableau()
+    {
+        var game = new Game(OrderedCards());
+        game.Hands[0].Slots[0].Knowledge.ApplyRankHint(1, isMatching: true);
+
+        game.Play(0);
+
+        Assert.Equal(0, game.RiskyPlayCount);
+    }
+
+    [Fact]
+    public void Play_CardKnownExactlyAndPlayableIsSafe()
+    {
+        var game = new Game(OrderedCards());
+        game.Hands[0].Slots[0].Knowledge.ApplyColorHint(CardColor.Red, isMatching: true);
+        game.Hands[0].Slots[0].Knowledge.ApplyRankHint(1, isMatching: true);
+
+        game.Play(0);
+
+        Assert.Equal(0, game.RiskyPlayCount);
+    }
+
+    [Fact]
+    public void Play_PartialKnowledgeWithPlayableAndUnplayablePossibilitiesIsRisky()
+    {
+        var cards = OrderedCards();
+        var game = new Game(cards);
+        game.Hands[0].Slots[0].Knowledge.ApplyColorHint(CardColor.Red, isMatching: true);
+        game.Hands[0].Slots[0].Knowledge.ApplyRankHint(3, isMatching: false);
+        game.Hands[0].Slots[0].Knowledge.ApplyRankHint(4, isMatching: false);
+        game.Hands[0].Slots[0].Knowledge.ApplyRankHint(5, isMatching: false);
+
+        game.Play(0);
+
+        Assert.Equal(1, game.RiskyPlayCount);
+    }
+
+    [Fact]
+    public void Play_RiskyCountIncrementsOnlyAfterSuccessfulRiskyPlays()
+    {
+        var game = new Game(OrderedCards());
+
+        game.Play(0);
+
+        Assert.Equal(1, game.RiskyPlayCount);
+    }
+
+    [Fact]
+    public void Play_WhenInvalid_DoesNotIncrementRiskyPlayCount()
+    {
+        var game = new Game(OrderedCards());
+
+        game.Play(1);
+
+        Assert.Equal(0, game.RiskyPlayCount);
+    }
+
     private static List<Card> OrderedCards()
     {
         return

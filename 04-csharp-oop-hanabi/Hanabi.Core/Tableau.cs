@@ -11,6 +11,12 @@ public sealed class Tableau
         return card.Rank == highestRanks[(int)card.Color] + 1;
     }
 
+    public bool IsGuaranteedPlayable(CardKnowledge knowledge)
+    {
+        return knowledge.PossibleColors.All(color =>
+            knowledge.PossibleRanks.All(rank => CanPlay(new Card(color, rank))));
+    }
+
     public void Play(Card card)
     {
         if (!CanPlay(card))
