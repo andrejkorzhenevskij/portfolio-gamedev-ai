@@ -45,7 +45,18 @@ public sealed class Game
 
     public void Drop(int handIndex)
     {
+        if (IsOver)
+        {
+            return;
+        }
+
         var hand = Hands[CurrentPlayerIndex];
+        if (!IsValidHandIndex(hand, handIndex))
+        {
+            EndInvalidAction();
+            return;
+        }
+
         var card = hand.RemoveAt(handIndex);
         DiscardPile.Add(card);
 
@@ -54,7 +65,18 @@ public sealed class Game
 
     public void Play(int handIndex)
     {
+        if (IsOver)
+        {
+            return;
+        }
+
         var hand = Hands[CurrentPlayerIndex];
+        if (!IsValidHandIndex(hand, handIndex))
+        {
+            EndInvalidAction();
+            return;
+        }
+
         var slot = hand.Slots[handIndex];
         var card = slot.Card;
         var isRisky = !Tableau.IsGuaranteedPlayable(slot.Knowledge);
@@ -70,16 +92,29 @@ public sealed class Game
         }
 
         Tableau.Play(card);
+        MoveNumber++;
+
         if (isRisky)
         {
             RiskyPlayCount++;
         }
 
-        CompleteSuccessfulAction(hand);
+        if (Tableau.Count == 25)
+        {
+            IsOver = true;
+            return;
+        }
+
+        CompleteSuccessfulActionAfterMoveCounted(hand);
     }
 
     public void TellColor(CardColor color, IEnumerable<int> indices)
     {
+        if (IsOver)
+        {
+            return;
+        }
+
         var hand = Hands[1 - CurrentPlayerIndex];
 
         if (!HintMatches(hand, indices, card => card.Color == color))
@@ -94,6 +129,11 @@ public sealed class Game
 
     public void TellRank(int rank, IEnumerable<int> indices)
     {
+        if (IsOver)
+        {
+            return;
+        }
+
         var hand = Hands[1 - CurrentPlayerIndex];
 
         if (!HintMatches(hand, indices, card => card.Rank == rank))
@@ -108,12 +148,16 @@ public sealed class Game
 
     private void CompleteSuccessfulAction(Hand hand)
     {
+        MoveNumber++;
+        CompleteSuccessfulActionAfterMoveCounted(hand);
+    }
+
+    private void CompleteSuccessfulActionAfterMoveCounted(Hand hand)
+    {
         if (!DrawDeck.IsEmpty)
         {
             hand.Add(DrawDeck.Draw());
         }
-
-        MoveNumber++;
 
         if (DrawDeck.IsEmpty)
         {
@@ -131,6 +175,17 @@ public sealed class Game
     }
 
     private void FailHint()
+    {
+        MoveNumber++;
+        IsOver = true;
+    }
+
+    private static bool IsValidHandIndex(Hand hand, int handIndex)
+    {
+        return handIndex >= 0 && handIndex < hand.Count;
+    }
+
+    private void EndInvalidAction()
     {
         MoveNumber++;
         IsOver = true;

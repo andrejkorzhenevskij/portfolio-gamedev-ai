@@ -166,6 +166,27 @@ public class GameTests
         Assert.Equal(0, game.CurrentPlayerIndex);
     }
 
+    [Theory]
+    [InlineData(-1)]
+    [InlineData(5)]
+    public void Drop_InvalidHandIndexEndsGameWithoutMutatingOtherState(int handIndex)
+    {
+        var game = new Game(OrderedCards());
+        var before = MutableState(game);
+
+        game.Drop(handIndex);
+
+        Assert.True(game.IsOver);
+        Assert.Equal(1, game.MoveNumber);
+        Assert.Equal(before, MutableState(game));
+    }
+
+    [Fact]
+    public void Drop_AfterGameOverIsIgnored()
+    {
+        AssertPostGameActionIgnored(game => game.Drop(0));
+    }
+
     [Fact]
     public void Play_WhenSuccessful_AddsSelectedCardToTableau()
     {
@@ -283,6 +304,43 @@ public class GameTests
     }
 
     [Fact]
+    public void Play_CompletingAllTwentyFiveCardsEndsGameWithoutDrawingOrSwitching()
+    {
+        var game = new Game(CompletionCards());
+        FillTableauThroughWhiteFour(game.Tableau);
+
+        game.Play(0);
+
+        Assert.True(game.IsOver);
+        Assert.Equal(1, game.MoveNumber);
+        Assert.Equal(0, game.CurrentPlayerIndex);
+        Assert.Equal(25, game.Tableau.Count);
+        Assert.Equal(3, game.DrawDeck.Count);
+        Assert.Equal([new Card(CardColor.Red, 1), new Card(CardColor.Red, 2), new Card(CardColor.Red, 3), new Card(CardColor.Red, 4)], game.Hands[0].Slots.Select(slot => slot.Card));
+    }
+
+    [Theory]
+    [InlineData(-1)]
+    [InlineData(5)]
+    public void Play_InvalidHandIndexEndsGameWithoutMutatingOtherState(int handIndex)
+    {
+        var game = new Game(OrderedCards());
+        var before = MutableState(game);
+
+        game.Play(handIndex);
+
+        Assert.True(game.IsOver);
+        Assert.Equal(1, game.MoveNumber);
+        Assert.Equal(before, MutableState(game));
+    }
+
+    [Fact]
+    public void Play_AfterGameOverIsIgnored()
+    {
+        AssertPostGameActionIgnored(game => game.Play(0));
+    }
+
+    [Fact]
     public void Play_UnknownSuccessfulRankOneOnEmptyTableauIsRisky()
     {
         var game = new Game(OrderedCards());
@@ -324,6 +382,21 @@ public class GameTests
         game.Hands[0].Slots[0].Knowledge.ApplyRankHint(3, isMatching: false);
         game.Hands[0].Slots[0].Knowledge.ApplyRankHint(4, isMatching: false);
         game.Hands[0].Slots[0].Knowledge.ApplyRankHint(5, isMatching: false);
+
+        game.Play(0);
+
+        Assert.Equal(1, game.RiskyPlayCount);
+    }
+
+    [Fact]
+    public void Play_ContradictoryKnowledgeIsRiskyNotSafe()
+    {
+        var game = new Game(OrderedCards());
+        var knowledge = game.Hands[0].Slots[0].Knowledge;
+        foreach (var color in Enum.GetValues<CardColor>())
+        {
+            knowledge.ApplyColorHint(color, isMatching: false);
+        }
 
         game.Play(0);
 
@@ -488,6 +561,18 @@ public class GameTests
         Assert.Equal(0, game.CurrentPlayerIndex);
     }
 
+    [Fact]
+    public void TellColor_AfterGameOverIsIgnored()
+    {
+        AssertPostGameActionIgnored(game => game.TellColor(CardColor.Blue, [0, 2]));
+    }
+
+    [Fact]
+    public void TellRank_AfterGameOverIsIgnored()
+    {
+        AssertPostGameActionIgnored(game => game.TellRank(1, [0, 3]));
+    }
+
     private static List<Card> OrderedCards()
     {
         return
@@ -524,5 +609,65 @@ public class GameTests
             new Card(CardColor.Green, 4),
             new Card(CardColor.White, 1),
         ];
+    }
+
+    private static List<Card> CompletionCards()
+    {
+        return
+        [
+            new Card(CardColor.White, 5),
+            new Card(CardColor.Red, 1),
+            new Card(CardColor.Red, 2),
+            new Card(CardColor.Red, 3),
+            new Card(CardColor.Red, 4),
+            new Card(CardColor.Blue, 1),
+            new Card(CardColor.Blue, 2),
+            new Card(CardColor.Blue, 3),
+            new Card(CardColor.Blue, 4),
+            new Card(CardColor.Blue, 5),
+            new Card(CardColor.Green, 1),
+            new Card(CardColor.Yellow, 1),
+            new Card(CardColor.White, 1),
+        ];
+    }
+
+    private static void FillTableauThroughWhiteFour(Tableau tableau)
+    {
+        foreach (var color in Enum.GetValues<CardColor>())
+        {
+            var lastRank = color == CardColor.White ? 4 : 5;
+            for (var rank = 1; rank <= lastRank; rank++)
+            {
+                tableau.Play(new Card(color, rank));
+            }
+        }
+    }
+
+    private static void AssertPostGameActionIgnored(Action<Game> action)
+    {
+        var game = new Game(MixedTargetHandCards());
+        game.TellColor(CardColor.Blue, [0]);
+        var before = FullState(game);
+
+        action(game);
+
+        Assert.Equal(before, FullState(game));
+    }
+
+    private static string FullState(Game game)
+    {
+        return $"{game.IsOver}|{game.MoveNumber}|{MutableState(game)}";
+    }
+
+    private static string MutableState(Game game)
+    {
+        var tableau = string.Join(",", Enum.GetValues<CardColor>()
+            .SelectMany(color => Enumerable.Range(1, 5)
+                .Select(rank => $"{color}:{rank}:{game.Tableau.CanPlay(new Card(color, rank))}")));
+        var hands = string.Join("|", game.Hands.Select(hand => string.Join(";", hand.Slots.Select(slot =>
+            $"{slot.Card.Color}:{slot.Card.Rank}:{string.Join(",", slot.Knowledge.PossibleColors)}:{string.Join(",", slot.Knowledge.PossibleRanks)}"))));
+        var discard = string.Join(",", game.DiscardPile.Cards.Select(card => $"{card.Color}:{card.Rank}"));
+
+        return $"{game.CurrentPlayerIndex}|{game.RiskyPlayCount}|{game.Tableau.Count}|{tableau}|{discard}|{hands}";
     }
 }

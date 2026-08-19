@@ -45,6 +45,16 @@ public class TableauTests
         Assert.False(tableau.CanPlay(new Card(CardColor.Red, 3)));
     }
 
+    [Theory]
+    [InlineData(0)]
+    [InlineData(6)]
+    public void CanPlay_InvalidRankIsFalse(int rank)
+    {
+        var tableau = new Tableau();
+
+        Assert.False(tableau.CanPlay(new Card(CardColor.Red, rank)));
+    }
+
     [Fact]
     public void ColorsProgressIndependently()
     {

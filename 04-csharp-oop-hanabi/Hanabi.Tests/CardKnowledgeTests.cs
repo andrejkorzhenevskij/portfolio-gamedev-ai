@@ -68,4 +68,28 @@ public class CardKnowledgeTests
         Assert.Equal([CardColor.Blue], knowledge.PossibleColors);
         Assert.Equal([2, 3, 4], knowledge.PossibleRanks);
     }
+
+    [Fact]
+    public void EmptyPossibleColorsIsNotGuaranteedPlayable()
+    {
+        var knowledge = new CardKnowledge();
+        foreach (var color in Enum.GetValues<CardColor>())
+        {
+            knowledge.ApplyColorHint(color, isMatching: false);
+        }
+
+        Assert.False(new Tableau().IsGuaranteedPlayable(knowledge));
+    }
+
+    [Fact]
+    public void EmptyPossibleRanksIsNotGuaranteedPlayable()
+    {
+        var knowledge = new CardKnowledge();
+        foreach (var rank in Enumerable.Range(1, 5))
+        {
+            knowledge.ApplyRankHint(rank, isMatching: false);
+        }
+
+        Assert.False(new Tableau().IsGuaranteedPlayable(knowledge));
+    }
 }
