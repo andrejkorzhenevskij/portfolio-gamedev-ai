@@ -35,11 +35,33 @@ public sealed class Game
 
     public DiscardPile DiscardPile { get; } = new();
 
-    public int CurrentPlayerIndex { get; } = 0;
+    public int CurrentPlayerIndex { get; private set; } = 0;
 
-    public int MoveNumber { get; } = 0;
+    public int MoveNumber { get; private set; } = 0;
 
     public int RiskyPlayCount { get; } = 0;
 
-    public bool IsOver { get; } = false;
+    public bool IsOver { get; private set; } = false;
+
+    public void Drop(int handIndex)
+    {
+        var hand = Hands[CurrentPlayerIndex];
+        var card = hand.RemoveAt(handIndex);
+        DiscardPile.Add(card);
+
+        if (!DrawDeck.IsEmpty)
+        {
+            hand.Add(DrawDeck.Draw());
+        }
+
+        MoveNumber++;
+
+        if (DrawDeck.IsEmpty)
+        {
+            IsOver = true;
+            return;
+        }
+
+        CurrentPlayerIndex = 1 - CurrentPlayerIndex;
+    }
 }
