@@ -78,6 +78,34 @@ public sealed class Game
         CompleteSuccessfulAction(hand);
     }
 
+    public void TellColor(CardColor color, IEnumerable<int> indices)
+    {
+        var hand = Hands[1 - CurrentPlayerIndex];
+
+        if (!HintMatches(hand, indices, card => card.Color == color))
+        {
+            FailHint();
+            return;
+        }
+
+        hand.ApplyColorHint(color);
+        CompleteHint();
+    }
+
+    public void TellRank(int rank, IEnumerable<int> indices)
+    {
+        var hand = Hands[1 - CurrentPlayerIndex];
+
+        if (!HintMatches(hand, indices, card => card.Rank == rank))
+        {
+            FailHint();
+            return;
+        }
+
+        hand.ApplyRankHint(rank);
+        CompleteHint();
+    }
+
     private void CompleteSuccessfulAction(Hand hand)
     {
         if (!DrawDeck.IsEmpty)
@@ -94,5 +122,36 @@ public sealed class Game
         }
 
         CurrentPlayerIndex = 1 - CurrentPlayerIndex;
+    }
+
+    private void CompleteHint()
+    {
+        MoveNumber++;
+        CurrentPlayerIndex = 1 - CurrentPlayerIndex;
+    }
+
+    private void FailHint()
+    {
+        MoveNumber++;
+        IsOver = true;
+    }
+
+    private static bool HintMatches(Hand hand, IEnumerable<int> indices, Func<Card, bool> matches)
+    {
+        var supplied = indices.ToList();
+
+        if (supplied.Distinct().Count() != supplied.Count ||
+            supplied.Any(index => index < 0 || index >= hand.Count))
+        {
+            return false;
+        }
+
+        var actual = hand.Slots
+            .Select((slot, index) => (slot, index))
+            .Where(item => matches(item.slot.Card))
+            .Select(item => item.index)
+            .ToHashSet();
+
+        return actual.Count > 0 && actual.SetEquals(supplied);
     }
 }

@@ -350,6 +350,144 @@ public class GameTests
         Assert.Equal(0, game.RiskyPlayCount);
     }
 
+    [Fact]
+    public void TellColor_WhenValid_UpdatesMatchingAndNonMatchingKnowledge()
+    {
+        var game = new Game(MixedTargetHandCards());
+
+        game.TellColor(CardColor.Blue, [0, 2]);
+
+        Assert.Equal([CardColor.Blue], game.Hands[1].Slots[0].Knowledge.PossibleColors);
+        Assert.DoesNotContain(CardColor.Blue, game.Hands[1].Slots[1].Knowledge.PossibleColors);
+        Assert.Equal([CardColor.Blue], game.Hands[1].Slots[2].Knowledge.PossibleColors);
+    }
+
+    [Fact]
+    public void TellRank_WhenValid_UpdatesMatchingAndNonMatchingKnowledge()
+    {
+        var game = new Game(MixedTargetHandCards());
+
+        game.TellRank(1, [0, 3]);
+
+        Assert.Equal([1], game.Hands[1].Slots[0].Knowledge.PossibleRanks);
+        Assert.DoesNotContain(1, game.Hands[1].Slots[1].Knowledge.PossibleRanks);
+        Assert.Equal([1], game.Hands[1].Slots[3].Knowledge.PossibleRanks);
+    }
+
+    [Fact]
+    public void TellColor_WhenValid_IncrementsMoveNumberAndSwitchesPlayer()
+    {
+        var game = new Game(MixedTargetHandCards());
+
+        game.TellColor(CardColor.Blue, [0, 2]);
+
+        Assert.Equal(1, game.MoveNumber);
+        Assert.Equal(1, game.CurrentPlayerIndex);
+    }
+
+    [Fact]
+    public void TellRank_PlayerTwoCanGiveValidHintOnTheirTurn()
+    {
+        var game = new Game(MixedTargetHandCards());
+        game.TellColor(CardColor.Blue, [0, 2]);
+
+        game.TellRank(1, [0]);
+
+        Assert.Equal([1], game.Hands[0].Slots[0].Knowledge.PossibleRanks);
+        Assert.Equal(2, game.MoveNumber);
+        Assert.Equal(0, game.CurrentPlayerIndex);
+    }
+
+    [Fact]
+    public void TellColor_OmittingMatchingIndexEndsGame()
+    {
+        var game = new Game(MixedTargetHandCards());
+
+        game.TellColor(CardColor.Blue, [0]);
+
+        Assert.True(game.IsOver);
+        Assert.Equal(1, game.MoveNumber);
+    }
+
+    [Fact]
+    public void TellColor_IncludingNonMatchingIndexEndsGame()
+    {
+        var game = new Game(MixedTargetHandCards());
+
+        game.TellColor(CardColor.Blue, [0, 1, 2]);
+
+        Assert.True(game.IsOver);
+        Assert.Equal(1, game.MoveNumber);
+    }
+
+    [Fact]
+    public void TellColor_NamingAbsentColorEndsGame()
+    {
+        var game = new Game(MixedTargetHandCards());
+
+        game.TellColor(CardColor.White, []);
+
+        Assert.True(game.IsOver);
+        Assert.Equal(1, game.MoveNumber);
+    }
+
+    [Fact]
+    public void TellRank_NamingAbsentRankEndsGame()
+    {
+        var game = new Game(MixedTargetHandCards());
+
+        game.TellRank(5, []);
+
+        Assert.True(game.IsOver);
+        Assert.Equal(1, game.MoveNumber);
+    }
+
+    [Fact]
+    public void TellRank_DuplicateIndexEndsGame()
+    {
+        var game = new Game(MixedTargetHandCards());
+
+        game.TellRank(1, [0, 0, 3]);
+
+        Assert.True(game.IsOver);
+        Assert.Equal(1, game.MoveNumber);
+    }
+
+    [Fact]
+    public void TellRank_OutOfRangeIndexEndsGame()
+    {
+        var game = new Game(MixedTargetHandCards());
+
+        game.TellRank(1, [0, 3, 5]);
+
+        Assert.True(game.IsOver);
+        Assert.Equal(1, game.MoveNumber);
+    }
+
+    [Fact]
+    public void TellColor_WhenInvalid_DoesNotModifyKnowledge()
+    {
+        var game = new Game(MixedTargetHandCards());
+
+        game.TellColor(CardColor.Blue, [0]);
+
+        foreach (var slot in game.Hands[1].Slots)
+        {
+            Assert.Equal(Enum.GetValues<CardColor>(), slot.Knowledge.PossibleColors);
+            Assert.Equal([1, 2, 3, 4, 5], slot.Knowledge.PossibleRanks);
+        }
+    }
+
+    [Fact]
+    public void TellColor_WhenInvalid_DoesNotSwitchPlayers()
+    {
+        var game = new Game(MixedTargetHandCards());
+
+        game.TellColor(CardColor.Blue, [0]);
+
+        Assert.Equal(0, game.CurrentPlayerIndex);
+    }
+
     private static List<Card> OrderedCards()
     {
         return
@@ -366,6 +504,24 @@ public class GameTests
             new Card(CardColor.Blue, 5),
             new Card(CardColor.Green, 1),
             new Card(CardColor.Yellow, 1),
+            new Card(CardColor.White, 1),
+        ];
+    }
+
+    private static List<Card> MixedTargetHandCards()
+    {
+        return
+        [
+            new Card(CardColor.Red, 1),
+            new Card(CardColor.Red, 2),
+            new Card(CardColor.Red, 3),
+            new Card(CardColor.Red, 4),
+            new Card(CardColor.Red, 5),
+            new Card(CardColor.Blue, 1),
+            new Card(CardColor.Green, 2),
+            new Card(CardColor.Blue, 3),
+            new Card(CardColor.Yellow, 1),
+            new Card(CardColor.Green, 4),
             new Card(CardColor.White, 1),
         ];
     }
