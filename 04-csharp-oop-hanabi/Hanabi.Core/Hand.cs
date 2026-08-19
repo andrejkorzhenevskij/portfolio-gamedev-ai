@@ -2,21 +2,21 @@ namespace Hanabi.Core;
 
 public sealed class Hand
 {
-    private readonly List<Card> cards = [];
+    private readonly List<HandSlot> slots = [];
 
-    public int Count => cards.Count;
+    public int Count => slots.Count;
 
-    public IReadOnlyList<Card> Cards => cards;
+    public IReadOnlyList<HandSlot> Slots => slots;
 
     public void Add(Card card)
     {
-        cards.Add(card);
+        slots.Add(new HandSlot(card));
     }
 
     public Card RemoveAt(int index)
     {
-        var card = cards[index];
-        cards.RemoveAt(index);
-        return card;
+        var slot = slots[index];
+        slots.RemoveAt(index);
+        return slot.Card;
     }
 }
