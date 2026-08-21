@@ -1,2 +1,0 @@
-﻿37607
-/home/seb/Applications/Godot_v4.7.1-stable_mono_linux.x86_64

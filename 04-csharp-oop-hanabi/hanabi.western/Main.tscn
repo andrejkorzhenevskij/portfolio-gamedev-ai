@@ -1,4 +1,4 @@
-[gd_scene load_steps=2 format=3 uid="uid://d2w6c2t8gn6qt"]
+[gd_scene format=3 uid="uid://d2w6c2t8gn6qt"]
 
 [ext_resource type="Script" path="res://Main.cs" id="1_western"]
 
