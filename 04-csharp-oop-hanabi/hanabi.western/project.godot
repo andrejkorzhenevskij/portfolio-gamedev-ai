@@ -11,16 +11,15 @@ config_version=5
 [application]
 
 config/name="Hanabi.Western"
-run/main_scene="res://Main.tscn"
+run/main_scene="res://StartMenu.tscn"
 config/features=PackedStringArray("4.7", "C#", "Forward Plus")
+boot_splash/bg_color=Color(0.015, 0.015, 0.015, 1)
 config/icon="res://icon.svg"
+boot_splash/minimum_display_time=900
 
 [display]
 
-window/size/viewport_width=1152
-window/size/viewport_height=648
 window/stretch/mode="canvas_items"
-window/stretch/aspect="expand"
 
 [dotnet]
 

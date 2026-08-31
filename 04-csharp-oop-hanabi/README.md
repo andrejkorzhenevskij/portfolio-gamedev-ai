@@ -1,12 +1,13 @@
-# Hanabi - C# OOP Exercise
+# Hanabi Western
 
-A completed C#/.NET 8 implementation of a simplified two-player Hanabi assignment focused on object-oriented design.
+A complete C#/.NET 8 implementation of a simplified two-player Hanabi assignment, presented as a story-driven Western game in Godot 4.
 
-- Simplified two-player Hanabi
-- Console application
-- Explicit ordered input deck
-- Game rules isolated from input/output
-- Developed with tests
+- Playable Godot/C# Western adaptation
+- Intro, contextual table guide, animated outcomes, and multiple endings
+- Simplified two-player Hanabi rules with a partner AI
+- Game rules isolated from presentation code
+- Console interface retained as a reference client
+- 94 automated tests for the shared game logic
 
 ## Why this project is interesting
 
@@ -14,7 +15,7 @@ The main modeling challenge is that players cannot see their own cards. The prog
 
 Successful plays can also be classified as risky based on whether the player's current knowledge guaranteed that the play was legal.
 
-This is a simplified assignment implementation, not a full commercial game or complete standard Hanabi ruleset.
+This is a stylized adaptation of the assignment, not a complete implementation of standard Hanabi rules.
 
 ## Architecture
 
@@ -30,6 +31,8 @@ This is a simplified assignment implementation, not a full commercial game or co
 `Hanabi.Cli` handles parsing console commands and formatting the final game result. It contains no game rules.
 
 `Hanabi.Tests` contains xUnit tests for domain rules and CLI parsing/output.
+
+`hanabi.western` is the Godot 4 C# frontend. It turns the cooperative card game into a five-part train robbery, with narrative scenes, partner advice, contextual help, and success or failure cutscenes.
 
 `Game` coordinates actions and turn state, `Tableau` owns playability, and `CardKnowledge` represents what a player knows about a hidden card.
 
@@ -80,7 +83,17 @@ Example:
 
 ## Running
 
-From `04-csharp-oop-hanabi`:
+### Western game
+
+Open `hanabi.western/project.godot` in Godot 4.7 with .NET support, or run it from `04-csharp-oop-hanabi`:
+
+```bash
+godot --path hanabi.western
+```
+
+The game is designed for a 16:9 window and scales its interface to the available viewport.
+
+### Console client
 
 ```bash
 dotnet run --project Hanabi.Cli
@@ -101,7 +114,11 @@ printf '%s\n' \
 dotnet test
 ```
 
-The current suite contains 94 passing tests.
+The current suite contains 94 passing tests. To compile the Godot frontend separately:
+
+```bash
+dotnet build hanabi.western/Hanabi.Western.csproj
+```
 
 ## Design Notes
 
@@ -110,6 +127,11 @@ The current suite contains 94 passing tests.
 - Guaranteed playability evaluates all cards consistent with `CardKnowledge`.
 - `Game` receives an explicit ordered deck; it does not depend on standard Hanabi deck construction or shuffling.
 
-## Possible Next Step
+## Western Gameplay
 
-The same `Hanabi.Core` could later be reused by a graphical or web frontend without moving game rules into UI code.
+- Build five ordered plan lanes from rank 1 through 5.
+- Play, discard, or give the partner a color or rank hint.
+- Spend your share of the loot to ask the partner for advice.
+- Recover hint tokens by discarding or completing a lane.
+- Finish at least three lanes to escape with a share of the robbery proceeds.
+- A third mistake ends the robbery immediately.
