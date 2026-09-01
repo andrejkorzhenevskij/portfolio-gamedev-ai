@@ -83,7 +83,7 @@ public partial class BadGameOverCutscene : Control
 
         failureTitle = new Label
         {
-            Text = "Не удалось",
+            Text = GameText.Pick("Не удалось", "No luck."),
             Position = new Vector2(326, 235),
             Size = new Vector2(500, 86),
             HorizontalAlignment = HorizontalAlignment.Center,
@@ -99,7 +99,7 @@ public partial class BadGameOverCutscene : Control
 
         retryButton = new Button
         {
-            Text = "Ещё раз?",
+            Text = GameText.Pick("Ещё раз?", "Again?"),
             Position = new Vector2(476, 344),
             Size = new Vector2(200, 58),
             Visible = false,
@@ -117,7 +117,7 @@ public partial class BadGameOverCutscene : Control
             GetTree().ChangeSceneToFile(MainScenePath);
         };
         AddChild(retryButton);
-        AddChild(new CutsceneText { TextPath = "res://texts/mistake-3.md" });
+        AddChild(new CutsceneText { TextPath = GameText.Path("mistake-3.md") });
     }
 
     public override void _Process(double delta)

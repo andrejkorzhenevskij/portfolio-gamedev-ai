@@ -69,7 +69,7 @@ public partial class StartMenu : Control
     private Control studioSplash = null!;
     private Label title = null!;
     private Label subtitle = null!;
-    private Button enterButton = null!;
+    private Button firstLanguageButton = null!;
     private HBoxContainer menuButtons = null!;
     private int revealStep;
     private bool studioVisible = true;
@@ -160,7 +160,7 @@ public partial class StartMenu : Control
             Material = new ShaderMaterial { Shader = new Shader { Code = DustShader } }
         });
 
-        title = CreateTitleLabel("ПОСЛЕДНЕЕ ДЕЛО", new Vector2(126, 74), new Vector2(900, 78), 54);
+        title = CreateTitleLabel("THE LAST JOB", new Vector2(126, 74), new Vector2(900, 78), 54);
         subtitle = CreateTitleLabel("HANABI WESTERN", new Vector2(276, 150), new Vector2(600, 48), 25);
         title.Visible = false;
         subtitle.Visible = false;
@@ -169,14 +169,15 @@ public partial class StartMenu : Control
 
         menuButtons = new HBoxContainer
         {
-            Position = new Vector2(494, 548),
-            Size = new Vector2(164, 54),
+            Position = new Vector2(408, 548),
+            Size = new Vector2(336, 54),
             Visible = false
         };
         menuButtons.AddThemeConstantOverride("separation", 8);
 
-        enterButton = CreateMenuButton("Начали!", () => GetTree().ChangeSceneToFile(IntroScenePath));
-        menuButtons.AddChild(enterButton);
+        firstLanguageButton = CreateMenuButton("EN", () => StartGame("en"));
+        menuButtons.AddChild(firstLanguageButton);
+        menuButtons.AddChild(CreateMenuButton("RU", () => StartGame("ru")));
         AddChild(menuButtons);
     }
 
@@ -247,7 +248,7 @@ public partial class StartMenu : Control
                 break;
             case 3:
                 Reveal(menuButtons);
-                enterButton.GrabFocus();
+                firstLanguageButton.GrabFocus();
                 break;
         }
     }
@@ -257,6 +258,12 @@ public partial class StartMenu : Control
         item.Visible = true;
         item.Modulate = new Color(1, 1, 1, 0);
         CreateTween().TweenProperty(item, "modulate:a", 1f, 0.32);
+    }
+
+    private void StartGame(string locale)
+    {
+        GameText.Use(locale);
+        GetTree().ChangeSceneToFile(IntroScenePath);
     }
 
     private static TextureRect FullRectTexture(string texturePath)

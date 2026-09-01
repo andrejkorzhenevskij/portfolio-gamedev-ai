@@ -108,7 +108,7 @@ public partial class MistakeTwoCutscene : Control
             Material = telescopeMaterial
         };
         AddChild(telescopeMask);
-        AddChild(new CutsceneText { TextPath = "res://texts/mistake-2.md" });
+        AddChild(new CutsceneText { TextPath = GameText.Path("mistake-2.md") });
     }
 
     public override void _Process(double delta)

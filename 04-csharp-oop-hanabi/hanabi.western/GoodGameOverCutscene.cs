@@ -99,7 +99,7 @@ public partial class GoodGameOverCutscene : Control
 
         title = new Label
         {
-            Text = "Дело сделано.",
+            Text = GameText.Pick("Дело сделано.", "Job done."),
             Position = new Vector2(276, 260),
             Size = new Vector2(600, 100),
             HorizontalAlignment = HorizontalAlignment.Center,
@@ -136,7 +136,9 @@ public partial class GoodGameOverCutscene : Control
         {
             Position = new Vector2(18, 8),
             Size = new Vector2(724, 94),
-            Text = $"Ты унёс из этого {TableMessages.LootAmount(PlayerShare)} ({PlayerShare}%).\n{TableMessages.LootReply(PlayerShare)}",
+            Text = GameText.Pick(
+                $"Ты унёс из этого {TableMessages.LootAmount(PlayerShare)} ({PlayerShare}%).\n{TableMessages.LootEnding(PlayerShare)}",
+                $"You got out with {TableMessages.LootAmount(PlayerShare)} ({PlayerShare}%).\n{TableMessages.LootEnding(PlayerShare)}"),
             HorizontalAlignment = HorizontalAlignment.Center,
             VerticalAlignment = VerticalAlignment.Center,
             AutowrapMode = TextServer.AutowrapMode.WordSmart

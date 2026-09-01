@@ -16,7 +16,6 @@ public partial class Main : Control
     private const float PartnerBreathPixels = 4f;
     private const float PartnerBreathPeriod = 5.8f;
     private const string LogPath = "hanabi_log.txt";
-    private const string RulesPath = "res://texts/rules.md";
     private const string SaloonBackgroundTexturePath = "res://assets/saloon_background.png";
     private const string TableTexturePath = "res://assets/table.png";
     private const string CardBackTexturePath = "res://assets/card_back.png";
@@ -112,7 +111,9 @@ public partial class Main : Control
     private static readonly Vector2 FirstMistakeZoomTarget = new(340, 180);
     private static readonly Vector2 SecondMistakeZoomTarget = new(228, 180);
     private static readonly Vector2 LastMistakeZoomTarget = new(293, 501);
-    private static readonly string[] PlanLanes = ["Маршрут", "Оружие", "Охрана", "Цель", "Отход"];
+    private static readonly string[] RussianPlanLanes = ["Оружие", "Наводка", "Охрана", "Цель", "Отход"];
+    private static readonly string[] EnglishPlanLanes = ["Guns", "The Lead", "Escort", "The Mark", "Getaway"];
+    private static string[] PlanLanes => GameText.English ? EnglishPlanLanes : RussianPlanLanes;
     private static readonly CardColor[] LaneColors =
     [
         CardColor.Red,
@@ -136,7 +137,7 @@ public partial class Main : Control
     private int adviceCost = AdviceCostStep;
     private int turnNumber = 1;
     private int currentPlayerIndex = 0;
-    private string lastSelected = "Нет";
+    private string lastSelected = GameText.Pick("Нет", "None");
     private string lastAction = TableMessages.ChooseAction;
     private string lastResult = TableMessages.Waiting;
     private string playerHandMessage = "";
@@ -443,13 +444,13 @@ public partial class Main : Control
             ZIndex = 55
         };
         row.AddThemeConstantOverride("separation", 8);
-        row.AddChild(CreateActionButton("Правила", true, () =>
+        row.AddChild(CreateActionButton(GameText.Pick("Правила", "Rules"), true, () =>
         {
             rulesVisible = true;
             guideVisible = false;
             RefreshTable();
         }));
-        row.AddChild(CreateActionButton("Стол", true, () =>
+        row.AddChild(CreateActionButton(GameText.Pick("Стол", "Table"), true, () =>
         {
             guideVisible = true;
             rulesVisible = false;
@@ -478,7 +479,7 @@ public partial class Main : Control
         {
             Position = new Vector2(0, 18),
             Size = new Vector2(1084, 34),
-            Text = "Правила",
+            Text = GameText.Pick("Правила", "Rules"),
             HorizontalAlignment = HorizontalAlignment.Center
         };
         title.AddThemeColorOverride("font_color", new Color("f5e5b8"));
@@ -489,7 +490,7 @@ public partial class Main : Control
         {
             Position = new Vector2(56, 62),
             Size = new Vector2(972, 550),
-            Text = ReadMarkdownText(RulesPath),
+            Text = ReadMarkdownText(GameText.Path("rules.md")),
             AutowrapMode = TextServer.AutowrapMode.WordSmart,
             VerticalAlignment = VerticalAlignment.Top
         };
@@ -509,15 +510,15 @@ public partial class Main : Control
             guidePopupId = null;
             RefreshTable();
         }));
-        overlay.AddChild(CreateCallout("partner_hand", "рука партнёра", new Vector2(406, 78), new Vector2(170, 42)));
-        overlay.AddChild(CreateCallout("plan_lanes", "план", new Vector2(576, 252), new Vector2(132, 42)));
-        overlay.AddChild(CreateCallout("mistakes", "ошибки", new Vector2(106, 214), new Vector2(132, 42)));
-        overlay.AddChild(CreateCallout("draw_deck", "колода", new Vector2(964, 164), new Vector2(132, 42)));
-        overlay.AddChild(CreateCallout("hint_tokens", "жетоны", new Vector2(944, 304), new Vector2(132, 42)));
-        overlay.AddChild(CreateCallout("share_note", "доли", new Vector2(932, 486), new Vector2(132, 42)));
-        overlay.AddChild(CreateCallout("discard_pile", "отбой", new Vector2(790, 554), new Vector2(132, 42)));
-        overlay.AddChild(CreateCallout("player_hand", "ваша рука", new Vector2(384, 524), new Vector2(150, 42)));
-        overlay.AddChild(CreateCallout("ask_advice", "совет", new Vector2(42, 134), new Vector2(132, 42)));
+        overlay.AddChild(CreateCallout("partner_hand", GameText.Pick("рука партнёра", "partner's hand"), new Vector2(406, 78), new Vector2(170, 42)));
+        overlay.AddChild(CreateCallout("plan_lanes", GameText.Pick("план", "plan"), new Vector2(576, 252), new Vector2(132, 42)));
+        overlay.AddChild(CreateCallout("mistakes", GameText.Pick("ошибки", "mistakes"), new Vector2(106, 214), new Vector2(132, 42)));
+        overlay.AddChild(CreateCallout("draw_deck", GameText.Pick("колода", "deck"), new Vector2(964, 164), new Vector2(132, 42)));
+        overlay.AddChild(CreateCallout("hint_tokens", GameText.Pick("жетоны", "tokens"), new Vector2(944, 304), new Vector2(132, 42)));
+        overlay.AddChild(CreateCallout("share_note", GameText.Pick("доли", "the cut"), new Vector2(932, 486), new Vector2(132, 42)));
+        overlay.AddChild(CreateCallout("discard_pile", GameText.Pick("отбой", "discards"), new Vector2(790, 554), new Vector2(132, 42)));
+        overlay.AddChild(CreateCallout("player_hand", GameText.Pick("ваша рука", "your hand"), new Vector2(384, 524), new Vector2(150, 42)));
+        overlay.AddChild(CreateCallout("ask_advice", GameText.Pick("совет", "advice"), new Vector2(42, 134), new Vector2(132, 42)));
         if (guidePopupId is not null && sections.TryGetValue(guidePopupId, out var section))
         {
             overlay.AddChild(CreateGuidePopup(section.Title, section.Text));
@@ -629,7 +630,7 @@ public partial class Main : Control
     private static Dictionary<string, (string Title, string Text)> ReadGuideSections()
     {
         var sections = new Dictionary<string, (string Title, string Text)>();
-        using var file = Godot.FileAccess.Open("res://texts/table-guide.md", Godot.FileAccess.ModeFlags.Read);
+        using var file = Godot.FileAccess.Open(GameText.Path("table-guide.md"), Godot.FileAccess.ModeFlags.Read);
         if (file is null)
         {
             return sections;
@@ -688,7 +689,7 @@ public partial class Main : Control
         var button = new Button
         {
             Size = new Vector2(178, 58),
-            Text = $"Спросить совет\n{adviceCost}%",
+            Text = GameText.Pick($"Спросить совет\n{adviceCost}%", $"Ask for advice\n{adviceCost}%"),
             Disabled = !CanUseAdvice(),
             FocusMode = FocusModeEnum.None
         };
@@ -969,7 +970,7 @@ public partial class Main : Control
         if (!TryFindPlayableCard(0, out var adviceIndex))
         {
             playerHandMessage = TableMessages.NoAdvice;
-            lastSelected = "Партнёр";
+            lastSelected = GameText.Pick("Партнёр", "Partner");
             lastAction = TableMessages.AdviceRefused;
             lastResult = TableMessages.NoGoodMove;
             AddLog("Advice requested:");
@@ -984,7 +985,9 @@ public partial class Main : Control
         playerHandMessage = "";
         partnerAdviceCardIndex = adviceIndex;
         partnerAdviceCard = game.Hands[0].Slots[partnerAdviceCardIndex.Value].Card;
-        lastSelected = $"Партнёр выбрал карту {partnerAdviceCardIndex.Value + 1}";
+        lastSelected = GameText.Pick(
+            $"Партнёр выбрал карту {partnerAdviceCardIndex.Value + 1}",
+            $"Your partner picked card {partnerAdviceCardIndex.Value + 1}");
         lastAction = TableMessages.AdviceGiven(cost);
         lastResult = TableMessages.PartnerSuggestedCard;
         AddLog("Advice requested:");
@@ -1010,8 +1013,8 @@ public partial class Main : Control
             return;
         }
 
-        lastAction = "Забрали добычу.";
-        lastResult = $"План готов на {Score()}/25.";
+        lastAction = GameText.Pick("Забрали добычу.", "We took the money and ran.");
+        lastResult = GameText.Pick($"План готов на {Score()}/25.", $"The plan reached {Score()}/25.");
         goodGameOverCutscenePending = true;
         RefreshTable();
     }
@@ -1020,10 +1023,12 @@ public partial class Main : Control
     {
         var dialog = new ConfirmationDialog
         {
-            Title = "На том и порешим?",
-            DialogText = $"Твоя доля: {playerShare}% ({TableMessages.LootAmount(playerShare)}).\n{TableMessages.LootReply(playerShare)}",
-            OkButtonText = "На том и порешим",
-            CancelButtonText = "Продолжить",
+            Title = GameText.Pick("На том и порешим?", "Call it a deal?"),
+            DialogText = GameText.Pick(
+                $"Твоя доля: {playerShare}% ({TableMessages.LootAmount(playerShare)}).\n{TableMessages.LootReply(playerShare)}",
+                $"Your cut: {playerShare}% ({TableMessages.LootAmount(playerShare)}).\n{TableMessages.LootReply(playerShare)}"),
+            OkButtonText = GameText.Pick("На том и порешим", "Take it and run"),
+            CancelButtonText = GameText.Pick("Продолжить", "Keep going"),
             Exclusive = true
         };
         dialog.Confirmed += CashOut;
@@ -1350,7 +1355,7 @@ public partial class Main : Control
     {
         partnerAdviceOverlayVisible = true;
         playerHandMessage = "";
-        lastSelected = "Партнёр просит совет";
+        lastSelected = GameText.Pick("Партнёр просит совет", "Your partner wants advice");
         lastAction = TableMessages.PartnerAsksAdvice(adviceCost);
         lastResult = TableMessages.ChoosePartnerCard;
         AddLog("Partner asked for advice");
@@ -1748,8 +1753,10 @@ public partial class Main : Control
 
         var card = hand.Slots[selectedCardIndex.Value].Card;
         return selectedHandIndex == 0
-            ? $"Игрок: карта {selectedCardIndex.Value + 1} ({CardText(card)})"
-            : $"Партнёр: {CardText(card)}";
+            ? GameText.Pick(
+                $"Игрок: карта {selectedCardIndex.Value + 1} ({CardText(card)})",
+                $"You: card {selectedCardIndex.Value + 1} ({CardText(card)})")
+            : GameText.Pick($"Партнёр: {CardText(card)}", $"Partner: {CardText(card)}");
     }
 
     private void AddLog(string entry)
@@ -1770,7 +1777,7 @@ public partial class Main : Control
         var marked = game.Hands[handIndex].Slots
             .Select((slot, index) => IsHintedCard(slot.Card, handIndex) ? $"{index + 1}:{CardText(slot.Card)}" : "")
             .Where(text => text.Length > 0);
-        return string.Join(", ", marked.DefaultIfEmpty("нет"));
+        return string.Join(", ", marked.DefaultIfEmpty(GameText.Pick("нет", "none")));
     }
 
     private static VBoxContainer CreateZone(string name, Vector2 minimumSize, bool expand = true)
@@ -1952,7 +1959,7 @@ public partial class Main : Control
         {
             Position = new Vector2(0, 18),
             Size = new Vector2(660, 28),
-            Text = $"Партнёр просит совет ({adviceCost}%)",
+            Text = GameText.Pick($"Партнёр просит совет ({adviceCost}%)", $"Your partner wants advice ({adviceCost}%)"),
             HorizontalAlignment = HorizontalAlignment.Center
         };
         title.AddThemeColorOverride("font_color", Colors.White);
@@ -1980,12 +1987,12 @@ public partial class Main : Control
                 () => ResolvePartnerPlayAdvice(adviceIndex)));
         }
 
-        var waitButton = CreateActionButton("Не ходи", true, ResolvePartnerNoPlayAdvice);
+        var waitButton = CreateActionButton(GameText.Pick("Не ходи", "Hold"), true, ResolvePartnerNoPlayAdvice);
         waitButton.Position = new Vector2(160, 254);
         waitButton.Size = new Vector2(150, 40);
         panel.AddChild(waitButton);
 
-        var noAdviceButton = CreateActionButton("Не подскажу ничего", true, ResolvePartnerNoAdvice);
+        var noAdviceButton = CreateActionButton(GameText.Pick("Не подскажу ничего", "I got nothing"), true, ResolvePartnerNoAdvice);
         noAdviceButton.Position = new Vector2(326, 254);
         noAdviceButton.Size = new Vector2(190, 40);
         panel.AddChild(noAdviceButton);
@@ -2058,9 +2065,13 @@ public partial class Main : Control
         wheel.AddChild(drum);
 
         var playerCard = selectedHandIndex == 0;
-        AddChoice(wheel, drum, 0, playerCard ? "Сыграть" : "Подсказать цвет", playerCard ? CanPlaySelected() : CanHintSelected(), playerCard ? PlaySelected : HintSelectedColor);
-        AddChoice(wheel, drum, 1, playerCard ? "Сбросить" : "Подсказать ранг", playerCard ? CanDropSelected() : CanHintSelected(), playerCard ? DropSelected : HintSelectedRank);
-        AddChoice(wheel, drum, 2, "Назад", true, CloseCardOverlay);
+        AddChoice(wheel, drum, 0,
+            playerCard ? GameText.Pick("Сыграть", "Play") : GameText.Pick("Подсказать цвет", "Hint color"),
+            playerCard ? CanPlaySelected() : CanHintSelected(), playerCard ? PlaySelected : HintSelectedColor);
+        AddChoice(wheel, drum, 1,
+            playerCard ? GameText.Pick("Сбросить", "Discard") : GameText.Pick("Подсказать ранг", "Hint rank"),
+            playerCard ? CanDropSelected() : CanHintSelected(), playerCard ? DropSelected : HintSelectedRank);
+        AddChoice(wheel, drum, 2, GameText.Pick("Назад", "Back"), true, CloseCardOverlay);
         return wheel;
     }
 
@@ -2293,7 +2304,9 @@ public partial class Main : Control
             Position = new Vector2(1000, 408),
             CustomMinimumSize = ShareNoteSize,
             Size = ShareNoteSize,
-            Text = $"Доли\nМне {playerShare}%\nЕму {partnerShare}%\n{(Score() >= 16 ? "На том\nи порешим" : $"{Score()}/25")}",
+            Text = GameText.English
+                ? $"THE CUT\nME {playerShare}%\nHIM {partnerShare}%\n{(Score() >= 16 ? "TAKE IT\nAND RUN" : $"{Score()}/25")}"
+                : $"Доли\nМне {playerShare}%\nЕму {partnerShare}%\n{(Score() >= 16 ? "На том\nи порешим" : $"{Score()}/25")}",
             Disabled = Score() < 16 || mistakesLeft <= 0,
             FocusMode = FocusModeEnum.None,
             ZIndex = 60,
@@ -2458,7 +2471,8 @@ public partial class Main : Control
             CardColor.White => "W",
             _ => "?"
         };
-        return $"res://assets/{prefix}{rank}.png";
+        var languageFolder = GameText.English ? "en/" : "";
+        return $"res://assets/{languageFolder}{prefix}{rank}.png";
     }
 
     private static string CardText(Card card)

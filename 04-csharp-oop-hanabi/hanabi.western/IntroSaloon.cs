@@ -50,7 +50,7 @@ public partial class IntroSaloon : Control
 
         storyText = new StoryTextOverlay
         {
-            Segments = StoryTextOverlay.LoadSegments("res://texts/01-story-enter-saloon.md", "картина", "затем"),
+            Segments = StoryTextOverlay.LoadSegments(GameText.Path("01-story-enter-saloon.md"), "picture", "fade"),
             Finished = () => GetTree().ChangeSceneToFile(NextScenePath)
         };
         AddChild(storyText);

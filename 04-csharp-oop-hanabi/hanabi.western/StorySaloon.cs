@@ -54,7 +54,7 @@ public partial class StorySaloon : Control
 
         storyText = new StoryTextOverlay
         {
-            Segments = StoryTextOverlay.LoadSegments("res://texts/02-story-the-deal.md", "выход", "затем"),
+            Segments = StoryTextOverlay.LoadSegments(GameText.Path("02-story-the-deal.md"), "picture", "fade"),
             Finished = () => GetTree().ChangeSceneToFile(MainScenePath)
         };
         AddChild(storyText);

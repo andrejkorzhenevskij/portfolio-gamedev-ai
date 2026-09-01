@@ -47,7 +47,7 @@ public partial class MistakeOneCutscene : Control
             MouseFilter = MouseFilterEnum.Ignore
         };
         AddChild(riders);
-        AddChild(new CutsceneText { TextPath = "res://texts/mistake-1.md" });
+        AddChild(new CutsceneText { TextPath = GameText.Path("mistake-1.md") });
         SetFrame(0);
     }
 
