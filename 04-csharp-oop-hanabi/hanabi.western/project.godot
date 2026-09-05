@@ -12,7 +12,7 @@ config_version=5
 
 config/name="Hanabi.Western"
 run/main_scene="res://StartMenu.tscn"
-config/features=PackedStringArray("4.7", "C#", "Forward Plus")
+config/features=PackedStringArray("4.3", "C#", "Forward Plus")
 boot_splash/bg_color=Color(0.015, 0.015, 0.015, 1)
 config/icon="res://icon.svg"
 boot_splash/minimum_display_time=900
