@@ -1,108 +1,55 @@
-# Game Development, Narrative Systems & AI Automation Portfolio
+# Game Development & Technical Portfolio
 
-This repository contains selected technical cases focused on gameplay prototyping, narrative systems, code refactoring, and small production automation tools.
+A collection of selected game development, gameplay
+architecture, narrative systems, and C# engineering work.
 
-My primary area of interest is the intersection of **game design and implementation**: turning gameplay or narrative intent into working, inspectable systems with clear state management, maintainable structure, and documented trade-offs.
+Each completed case has its own repository, source code,
+documentation, and implementation notes.
 
-## Portfolio Cases
+## Featured Projects
 
-### 01 — [Godot Gameplay Architecture Refactor](./01-godot-gameplay-refactor/)
+### Godot Gameplay Architecture Refactor
 
-A before-and-after refactoring case based on a playable Godot prototype.
+[View repository](https://github.com/andrejkorzhenevskij/godot-gameplay-refactor-case)
 
-The refactor focuses on:
+A focused before-and-after GDScript refactoring case,
+covering enemy architecture, shared behavior,
+collision responsibilities, and scene organization.
 
-* extracting shared enemy behavior into a reusable base class;
-* simplifying the enemy scene hierarchy;
-* separating world and ground collision responsibilities;
-* reducing duplicated gameplay logic;
-* preserving the original playable behavior during architectural cleanup.
+### Hanabi — C# OOP Exercise
 
-**Demonstrates:** GDScript refactoring, inheritance, scene composition, gameplay architecture, collision logic, and working with an existing codebase.
+[View repository](https://github.com/andrejkorzhenevskij/hanabi-csharp-oop)
 
----
+A C#/.NET 8 implementation of a simplified two-player
+Hanabi assignment.
 
-### 02 — [Necessary Evil — Godot Narrative MVP](./02-godot-ne-mvp/)
+Includes separated domain logic, a console interface,
+and automated tests.
 
-A compact narrative gameplay prototype built in Godot.
+### Necessary Evil — Narrative Game Prototype
 
-The project implements:
+[View Godot project](https://github.com/andrejkorzhenevskij/necessary-evil-godot)
 
-* a complete screen-to-screen gameplay flow;
-* centralized state management through an autoload `GameState`;
-* choice and result routing;
-* a surgery-style interactive layer;
-* final outcome resolution;
-* persistent meta-progression between runs;
-* narrative content integrated directly into the gameplay structure.
+An experimental Godot narrative system featuring
+state-driven gameplay, branching flow, and meta-progression.
 
-**Demonstrates:** narrative systems implementation, state-driven UI flow, persistent progression, scene coordination, GDScript architecture, and technical documentation of an MVP.
+An additional script snapshot is preserved in
+[02-godot-ne-mvp](./02-godot-ne-mvp/)
+pending consolidation. This snapshot is not a
+standalone runnable Godot project.
 
----
+## Other Engineering Work
 
-### 03 — AI Job Scout
+[Python API Integration Demo](https://github.com/andrejkorzhenevskij/python-api-integration-demo)
+— FastAPI, PostgreSQL, Docker Compose, and automated tests.
 
-Currently in development.
+## About
 
-A Python utility for collecting, normalizing, filtering, and evaluating job postings relevant to game development, narrative design, and AI-assisted creative production.
+My work focuses on turning game design and narrative
+requirements into inspectable software systems.
 
-The case will include:
+I work with C#, Godot/GDScript, JavaScript, Python,
+and AI-assisted development workflows.
 
-* the working script;
-* sanitized input and output examples;
-* transparent filtering and scoring rules;
-* documented limitations and possible extensions.
-
-**Demonstrates:** Python automation, text processing, structured data handling, explainable filtering logic, and practical AI-assisted workflow design.
-
-## Technical Focus
-
-* Godot 4 and GDScript
-* Gameplay and narrative prototyping
-* State management and UI flow
-* Refactoring existing gameplay code
-* Scene and responsibility separation
-* Persistent and meta-progression systems
-* Python automation
-* Structured content processing
-* Technical documentation
-* Git and GitHub workflows
-
-## Repository Approach
-
-Each completed case is intended to be understandable independently.
-
-A case generally contains:
-
-* a concise description of the original task;
-* the implementation or relevant source files;
-* an explanation of architectural decisions;
-* instructions for inspecting or running the project;
-* known limitations and deliberately excluded scope;
-* additional examples or documentation when they provide useful evidence.
-
-These are focused portfolio cases rather than claims of production-complete commercial software. The emphasis is on clear problem framing, working implementation, maintainable decisions, and honest documentation of trade-offs.
-
-## Relevant Roles
-
-This portfolio is primarily relevant to roles such as:
-
-* Technical Narrative Designer
-* Narrative Systems Designer
-* Gameplay or Narrative Prototyper
-* Godot Developer
-* Junior or Transitioning Gameplay Developer
-* AI-Assisted Workflow Prototyper
-* Technical Game Designer
-
-## Repository Structure
-
-```text
-portfolio-gamedev-ai/
-├── 01-godot-gameplay-refactor/
-├── 02-godot-ne-mvp/
-└── 03-ai-job-scout/
-```
-
-Additional cases will be added as complete, inspectable artifacts rather than empty placeholders.
-
+This repository serves as a portfolio index.
+Individual projects are maintained in their own repositories.
